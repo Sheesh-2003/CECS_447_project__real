@@ -538,43 +538,6 @@ UARTwrite(const char *pcBuf, uint32_t ui32Len)
 
 //*****************************************************************************
 //
-//! Writes a string of characters to the UART output. (valvano added)
-//!
-//! \param pcBuf points to null-terminated string containing the data to transmit.
-//!
-//! This function will transmit the string to the UART output.  This
-//! function does no interpretation or translation of any characters.  Since
-//! the output is sent to a UART, any LF (/n) characters encountered will be
-//! replaced with a CRLF pair.
-//!
-//! The string is null transmitted.
-//!
-//! In non-buffered mode, this function is blocking and will not return until
-//! all the characters have been written to the output FIFO.  Buffered mode is not implemented,
-
-//!
-//! \return none
-//
-//*****************************************************************************
-void UARTOutString(char *pcBuf){
-//#ifdef UART_BUFFERED
-   // not implemented
-//#else
-    // Check for valid UART base address, and valid arguments.
-//  ASSERT(g_ui32Base == 0);
-//  ASSERT(pcBuf != 0);
-  while(*pcBuf){ // Send the characters
-    if(*pcBuf == '\n'){// \n is translated to \n\r in the output.
-       MAP_UARTCharPut(g_ui32Base, '\r');
-    }
-    MAP_UARTCharPut(g_ui32Base, *pcBuf);// Send the character to the UART output.
-    pcBuf++;
-  }
-//#endif
-}
-
-//*****************************************************************************
-//
 //! A simple UART based get string function, with some line processing.
 //!
 //! \param pcBuf points to a buffer for the incoming string from the UART.
@@ -1753,6 +1716,8 @@ UARTStdioIntHandler(void)
         MAP_UARTIntEnable(g_ui32Base, UART_INT_TX);
     }
 }
+#else
+void UARTStdioIntHandler(void){};  // so it will link
 #endif
 
 //*****************************************************************************

@@ -1,5 +1,5 @@
 /*
- * uart.h - tiva-c launchpad uart interface implementation
+ * spi.h - tiva-c launchpad spi interface implementation
  *
  * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/ 
  * 
@@ -34,123 +34,113 @@
  *
 */
 
-#ifdef SL_IF_TYPE_UART
-#ifndef __UART_H__
-
-#define __UART_H__
-
+#ifndef SL_IF_TYPE_UART
+#ifndef __SPI_H__
+#define __SPI_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-#define UART_IF_OPEN_FLAG_NONE    0
-#define UART_IF_OPEN_FLAG_RE_OPEN 1
-
 /*!
-    \brief   type definition for the uart channel file descriptor
-
-    \note    On each porting or platform the type could be whatever is needed
+    \brief   type definition for the spi channel file descriptor
+    
+    \note    On each porting or platform the type could be whatever is needed 
             - integer, pointer to structure etc.
 */
 typedef unsigned int Fd_t;
 
 
 /*!
-    \brief open uart communication port with baud rate 115200 to be used for 
-	       communicating with a SimpleLink device
+    \brief open spi communication port to be used for communicating with a
+           SimpleLink device
 
-    Given an interface name and option flags, this function opens the UART
+    Given an interface name and option flags, this function opens the spi
     communication port and creates a file descriptor. This file descriptor can
-    be used afterwards to read and write data from and to this specific uart
+    be used afterwards to read and write data from and to this specific spi
     channel.
-    The all uart attributes are all set to hardcoded values in this function.
+    The SPI speed, clock polarity, clock phase, chip select and all other 
+    attributes are all set to hardcoded values in this function.
 
-    \param[in]      ifName    -    points to the interface name/path. The
-                    interface name is an optional attributes that the simple
+    \param[in]      ifName    -    points to the interface name/path. The 
+                    interface name is an optional attributes that the simple 
                     link driver receives on opening the device. in systems that
-                    the uart channel is not implemented as part of the os device
+                    the spi channel is not implemented as part of the os device
                     drivers, this parameter could be NULL.
     \param[in]      flags     -    option flags
 
-    \return         upon successful completion, the function shall open the uart
+    \return         upon successful completion, the function shall open the spi
                     channel and return a non-negative integer representing the
                     file descriptor. Otherwise, -1 shall be returned
 
-    \sa             uart_Close , uart_Read , uart_Write
+    \sa             spi_Close , spi_Read , spi_Write
     \note
     \warning
 */
 
-Fd_t uart_Open(char *ifName, unsigned long flags);
-
+Fd_t spi_Open(char *ifName, unsigned long flags);
 
 /*!
-    \brief closes an opened uart communication port
+    \brief closes an opened spi communication port
 
-    \param[in]      fd    -     file descriptor of an opened UART channel
+    \param[in]      fd    -     file descriptor of an opened SPI channel
 
     \return         upon successful completion, the function shall return 0.
                     Otherwise, -1 shall be returned
 
-    \sa             uart_Open
+    \sa             spi_Open
     \note
     \warning
 */
-int uart_Close(Fd_t fd);
-
+int spi_Close(Fd_t fd);
 
 /*!
-    \brief attempts to read up to len bytes from UART channel into a buffer
+    \brief attempts to read up to len bytes from SPI channel into a buffer 
            starting at pBuff.
 
-    \param[in]      fd     -    file descriptor of an opened UART channel
+    \param[in]      fd     -    file descriptor of an opened SPI channel
 
-    \param[in]      pBuff  -    points to first location to start writing the
+    \param[in]      pBuff  -    points to first location to start writing the 
                     data
 
-    \param[in]      len    -    number of bytes to read from the UART channel
+    \param[in]      len    -    number of bytes to read from the SPI channel
 
     \return         upon successful completion, the function shall return 0.
                     Otherwise, -1 shall be returned
 
-    \sa             uart_Open , uart_Write
+    \sa             spi_Open , spi_Write
     \note
     \warning
 */
-int uart_Read(Fd_t fd, unsigned char *pBuff, int len);
-
+int spi_Read(Fd_t fd, unsigned char *pBuff, int len);
 
 /*!
-    \brief attempts to write up to len bytes to the UART channel
+    \brief attempts to write up to len bytes to the SPI channel
 
-    \param[in]      fd        -    file descriptor of an opened UART channel
+    \param[in]      fd        -    file descriptor of an opened SPI channel
 
     \param[in]      pBuff     -    points to first location to start getting the
                     data from
 
-    \param[in]      len       -    number of bytes to write to the UART channel
+    \param[in]      len       -    number of bytes to write to the SPI channel
 
     \return         upon successful completion, the function shall return 0.
                     Otherwise, -1 shall be returned
 
-    \sa             uart_Open , uart_Read
-    \note           This function could be implemented as zero copy and return
+    \sa             spi_Open , spi_Read
+    \note           This function could be implemented as zero copy and return 
                     only upon successful completion of writing the whole buffer,
                     but in cases that memory allocation is not too tight, the
-                    function could copy the data to internal buffer, return
+                    function could copy the data to internal buffer, return 
                     back and complete the write in parallel to other activities
-                    as long as the other UART activities would be blocked until
+                    as long as the other SPI activities would be blocked until
                     the entire buffer write would be completed
     \warning
 */
-int uart_Write(Fd_t fd, unsigned char *pBuff, int len);
-
+int spi_Write(Fd_t fd, unsigned char *pBuff, int len);
 
 #ifdef  __cplusplus
 }
 #endif /* __cplusplus */
-
-#endif  /* __UART_H__ */
+#endif /* __SPI_H__ */
 #endif /* SL_IF_TYPE_UART */
